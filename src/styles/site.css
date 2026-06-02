@@ -923,7 +923,7 @@ p {
   display: flex;
   flex-direction: column;
   justify-content: end;
-  padding: clamp(26px, 4vw, 46px);
+  padding: calc(106px + clamp(26px, 4vw, 46px)) clamp(26px, 4vw, 46px) clamp(26px, 4vw, 46px);
   border-radius: 22px;
   background: var(--surface);
   border: 1px solid var(--line);
@@ -1418,7 +1418,7 @@ p {
   }
 
   .gallery-feature-copy {
-    padding: 24px;
+    padding: 122px 24px 24px;
   }
 
   .feature-card {
@@ -1501,7 +1501,7 @@ p {
     min-height: 112px;
   }
 
-  .cta-block > div {
+  .cta-block > div:not(.pattern-band) {
     padding-top: 104px;
   }
 
