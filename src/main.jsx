@@ -29,7 +29,7 @@ import "./styles/site.css";
 
 const A = "/assets/";
 
-const contactActionPattern = /(partner|volunteer|register interest|join the programme|join the program|join the movement|start a conversation|send a message|book a session|book a consultation|invite adebola|sponsor)/i;
+const contactActionPattern = /(partner|volunteer|register interest|join the programme|join the program|join the movement|start a conversation|send a message|book a session|book a consultation|invite adebola|invite debola|sponsor)/i;
 
 function resolveActionRoute(label, fallback = "contact") {
   return contactActionPattern.test(label || "") ? "contact" : fallback;
@@ -68,7 +68,7 @@ const navItems = [
 
 const pageCopy = {
   home: {
-    eyebrow: "Adebola Ibiyode Empowerment Foundation",
+    eyebrow: "Adebola (Debola) Ibiyode Empowerment Foundation",
     title: "AI for real impact, not just hype",
     body: "We help people understand AI, use it with confidence, and turn knowledge into opportunity, leadership, and practical innovation.",
     primary: "Explore Initiatives",
@@ -84,8 +84,8 @@ const pageCopy = {
   founder: {
     eyebrow: "Founder and AI Builder",
     title: "Built on real AI experience",
-    body: "Adebola Ibiyode is an AI expert, engineer, founder, speaker, and product builder with more than 20 years of experience building technology solutions.",
-    primary: "Invite Adebola to Speak",
+    body: "Debola Ibiyode is an AI expert, engineer, founder, speaker, and product builder with more than 20 years of experience building technology solutions.",
+    primary: "Invite Debola to Speak",
     secondary: "Explore the Foundation",
   },
   initiatives: {
@@ -186,7 +186,7 @@ const gallery = [
 ];
 
 const founderImages = [
-  `${A}founder-debola-hero.jpg`,
+  `${A}founder-debola-profile.jpg`,
   `${A}founder-debola-1.jpg`,
   `${A}founder-debola-2.jpg`,
   `${A}founder-debola-3.jpg`,
@@ -200,7 +200,7 @@ const galleryGroups = [
   {
     id: "founder-highlights",
     title: "Founder Highlights",
-    body: "Adebola Ibiyode leading, speaking, connecting, and representing the foundation's practical AI mission.",
+    body: "Debola Ibiyode leading, speaking, connecting, and representing the foundation's practical AI mission.",
     images: founderImages,
   },
   {
@@ -489,11 +489,11 @@ function About({ page, navigate }) {
 function Founder({ page, navigate }) {
   return (
     <>
-      <Hero page={page} image={`${A}founder-debola-hero.jpg`} compact />
+      <Hero page={page} image={`${A}founder-debola-profile.jpg`} compact />
       <section className="split section-shell">
-        <div className="portrait-frame"><img src={`${A}founder-debola-hero.jpg`} alt="Adebola Ibiyode" /></div>
+        <div className="portrait-frame"><img src={`${A}founder-debola-profile.jpg`} alt="Debola Ibiyode" /></div>
         <div>
-          <SectionIntro align="left" title="A builder first. A leader by practice." body="Adebola's work is shaped by years of building systems, leading teams, and applying technology to real problems. AIEF is guided by lived experience in technology and innovation." />
+          <SectionIntro align="left" title="A builder first. A leader by practice." body="Debola's work is shaped by years of building systems, leading teams, and applying technology to real problems. AIEF is guided by lived experience in technology and innovation." />
           <div className="cards two mini">
             <FeatureCard title="Founder of CarbonAI" text="An AI driven platform focused on carbon intelligence, sustainability, and better decision making." icon={Brain} />
             <FeatureCard title="Speaker and Advisor" text="Guiding leaders, organisations, and communities on practical AI adoption." icon={Mic} />
@@ -501,19 +501,19 @@ function Founder({ page, navigate }) {
         </div>
       </section>
       <section className="section-shell tinted founder-statement">
-        <SectionIntro title="AI must move beyond hype and deliver real value" body="For Adebola, AI is powerful when it helps people work better, think smarter, solve problems faster, and build stronger systems." />
+        <SectionIntro title="AI must move beyond hype and deliver real value" body="For Debola, AI is powerful when it helps people work better, think smarter, solve problems faster, and build stronger systems." />
       </section>
       <section className="section-shell">
         <SectionIntro title="Founder highlights" body="Moments from the AI in Action Now platform, showing the founder's role across leadership, convening, and practical AI conversations." />
         <div className="founder-photo-grid">
           {founderImages.slice(0, 6).map((image, index) => (
             <button className="photo-tile" key={image} type="button" onClick={() => navigate("gallery")}>
-              <img src={image} alt={`Adebola Ibiyode highlight ${index + 1}`} />
+              <img src={image} alt={`Debola Ibiyode highlight ${index + 1}`} />
             </button>
           ))}
         </div>
       </section>
-      <CTABlock title="Work with a leader who understands AI from the inside" body="Adebola is available for selected speaking, advisory, leadership, and partnership opportunities aligned with the foundation's mission." />
+      <CTABlock title="Work with a leader who understands AI from the inside" body="Debola is available for selected speaking, advisory, leadership, and partnership opportunities aligned with the foundation's mission." />
     </>
   );
 }
@@ -738,11 +738,11 @@ function Contact({ page }) {
 function FounderStrip({ navigate }) {
   return (
     <section className="split section-shell founder-strip">
-      <div className="portrait-frame"><img src={`${A}founder-debola-hero.jpg`} alt="Adebola Ibiyode" /></div>
+      <div className="portrait-frame"><img src={`${A}founder-debola-profile.jpg`} alt="Debola Ibiyode" /></div>
       <div>
         <p className="eyebrow">Founder led. Experience driven.</p>
-        <h2>Meet Adebola Ibiyode</h2>
-        <p>Adebola Ibiyode is an AI expert, engineer, founder, speaker, and product builder. Her work is rooted in one clear belief: AI must create real value for people and organisations.</p>
+        <h2>Meet Adebola (Debola) Ibiyode</h2>
+        <p>Debola Ibiyode is an AI expert, engineer, founder, speaker, and product builder. Her work is rooted in one clear belief: AI must create real value for people and organisations.</p>
         <button className="btn secondary" type="button" onClick={() => navigate("founder")}>Read Founder Story</button>
       </div>
     </section>
@@ -808,7 +808,7 @@ function Footer({ navigate }) {
       <div className="footer-top">
         <div className="footer-brand">
           <img src={`${A}aief-logo-blue.svg`} alt="" />
-          <p>Adebola Ibiyode Empowerment Foundation exists to make artificial intelligence practical, accessible, and impactful.</p>
+          <p>Debola Ibiyode Empowerment Foundation exists to make artificial intelligence practical, accessible, and impactful.</p>
         </div>
         {Object.entries(groups).map(([group, links]) => (
           <div className="footer-col" key={group}>
@@ -824,7 +824,7 @@ function Footer({ navigate }) {
         </div>
       </div>
       <PatternBand dark />
-      <p className="copyright">© 2026 Adebola Ibiyode Empowerment Foundation. Practical AI for builders, leaders, and communities.</p>
+      <p className="copyright">© 2026 Debola Ibiyode Empowerment Foundation. Practical AI for builders, leaders, and communities.</p>
     </footer>
   );
 }
