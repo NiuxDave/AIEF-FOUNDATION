@@ -446,7 +446,7 @@ p {
 .pattern-band::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: 0 -160px;
   background: url("/assets/pattern-wide-blue.svg") left top / 420px 100% repeat-x;
   filter: none;
 }
@@ -531,6 +531,7 @@ p {
   left: 0;
   right: 0;
   top: 0;
+  width: 100%;
   min-height: 94px;
   opacity: 1;
   border-radius: var(--radius-card) var(--radius-card) 0 0;
