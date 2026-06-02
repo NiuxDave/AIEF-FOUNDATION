@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   BookOpen,
@@ -27,6 +28,23 @@ import {
 import "./styles/site.css";
 
 const A = "/assets/";
+
+const contactActionPattern = /(partner|volunteer|register interest|join the programme|join the program|join the movement|start a conversation|send a message|book a session|book a consultation|invite adebola|sponsor)/i;
+
+function resolveActionRoute(label, fallback = "contact") {
+  return contactActionPattern.test(label || "") ? "contact" : fallback;
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const softScale = {
+  rest: { y: 0, scale: 1 },
+  hover: { y: -5, scale: 1.01, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } },
+  tap: { y: 0, scale: 0.985 },
+};
 
 const navItems = [
   { id: "home", label: "Home" },
@@ -316,22 +334,25 @@ function Header({ route, theme, onTheme, menuOpen, setMenuOpen, dropOpen, setDro
 }
 
 function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRoute = "initiatives", secondaryRoute = "get-involved", className = "" }) {
+  const primaryTarget = resolveActionRoute(page.primary, primaryRoute);
+  const secondaryTarget = resolveActionRoute(page.secondary, secondaryRoute);
+
   return (
     <section className={`${compact ? "hero compact section-shell" : "hero section-shell"} ${className}`}>
-      <div className="hero-copy">
+      <motion.div className="hero-copy" initial="hidden" animate="show" variants={fadeUp}>
         <p className="eyebrow">{page.eyebrow}</p>
         <h1>{page.title}</h1>
         <p className="hero-body">{page.body}</p>
         <div className="button-row">
-          <a className="btn primary" href={`#${primaryRoute}`}>
+          <a className="btn primary" href={`#${primaryTarget}`}>
             {page.primary} <ArrowRight size={16} />
           </a>
-          <a className="btn secondary" href={`#${secondaryRoute}`}>
+          <a className="btn secondary" href={`#${secondaryTarget}`}>
             {page.secondary}
           </a>
         </div>
-      </div>
-      <div className="hero-art">
+      </motion.div>
+      <motion.div className="hero-art" initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>
         <div className="orb-card">
           <img src={image} alt="" />
           <div className="hero-stat">
@@ -339,7 +360,7 @@ function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRou
             <span>people engaged</span>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -350,27 +371,37 @@ function PatternBand({ dark = false }) {
 
 function SectionIntro({ kicker, title, body, align = "center" }) {
   return (
-    <div className={`section-intro ${align}`}>
+    <motion.div className={`section-intro ${align}`} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }} variants={fadeUp}>
       {kicker && <p className="eyebrow">{kicker}</p>}
       <h2>{title}</h2>
       {body && <p>{body}</p>}
-    </div>
+    </motion.div>
   );
 }
 
 function FeatureCard({ title, text, icon: Icon = Sparkles, action, route, navigate, className = "" }) {
+  const targetRoute = resolveActionRoute(action || title, route);
+
   return (
-    <article className={`feature-card ${className}`}>
+    <motion.article
+      className={`feature-card ${className}`}
+      initial="hidden"
+      whileInView="show"
+      whileHover="hover"
+      whileTap="tap"
+      viewport={{ once: true, amount: 0.25 }}
+      variants={{ ...fadeUp, ...softScale }}
+    >
       <div className="icon-disc"><Icon size={20} /></div>
       <h3>{title}</h3>
       <p>{text}</p>
       {action && (
-        <button type="button" className="text-link" onClick={() => navigate(route)}>
+        <button type="button" className="text-link" onClick={() => navigate(targetRoute)}>
           {action} <CircleArrowOutUpRight size={15} />
         </button>
       )}
       <PatternBand />
-    </article>
+    </motion.article>
   );
 }
 
@@ -611,7 +642,7 @@ function Gallery({ page, navigate }) {
 function Mentorship({ page }) {
   return (
     <>
-      <Hero page={page} image={`${A}event-speaker.jpg`} compact />
+      <Hero page={page} image={`${A}event-speaker.jpg`} compact primaryRoute="contact" secondaryRoute="contact" />
       <section className="section-shell">
         <SectionIntro title="Clear guidance. Practical learning. Real direction." body="This mentorship is about helping learners build strong foundations, understand the AI landscape, and know how to move from interest to action." />
         <div className="cards three">
@@ -639,7 +670,7 @@ function Mentorship({ page }) {
 function Speaking({ page }) {
   return (
     <>
-      <Hero page={page} image={`${A}event-redcarpet.jpg`} compact />
+      <Hero page={page} image={`${A}event-redcarpet.jpg`} compact primaryRoute="contact" secondaryRoute="contact" />
       <section className="section-shell">
         <SectionIntro title="AI adoption needs more than excitement" body="AIEF helps leaders move with clarity, responsibility, and practical direction through talks, workshops, and advisory support." />
         <div className="cards three">
@@ -754,14 +785,14 @@ function SponsorStrip() {
 
 function CTABlock({ title, body }) {
   return (
-    <section className="cta-block">
+    <motion.section className="cta-block" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }} variants={fadeUp}>
       <PatternBand dark />
       <div>
         <h2>{title}</h2>
         <p>{body}</p>
         <a className="btn primary light" href="#contact">Start a Conversation <ArrowRight size={16} /></a>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
