@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
   ArrowRight,
   BookOpen,
@@ -30,6 +30,11 @@ import "./styles/site.css";
 const A = "/assets/";
 
 const contactActionPattern = /(partner|volunteer|register interest|join the programme|join the program|join the movement|start a conversation|send a message|book a session|book a consultation|invite adebola|invite debola|sponsor)/i;
+const socialLinks = {
+  youtube: "https://www.youtube.com/results?search_query=Debola+Ibiyode",
+  instagram: "https://www.instagram.com/aiinactionnow?igsh=ZHowMGZ5ZDk4ZG13&utm_source=qr",
+  linkedin: "https://www.linkedin.com/feed/update/urn:li:activity:7472663390587445248/",
+};
 
 function resolveActionRoute(label, fallback = "contact") {
   return contactActionPattern.test(label || "") ? "contact" : fallback;
@@ -40,9 +45,29 @@ const fadeUp = {
   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } },
 };
 
+const staggerGroup = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const revealItem = {
+  hidden: { opacity: 0, y: 18, filter: "blur(8px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.56, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
 const softScale = {
-  rest: { y: 0, scale: 1 },
-  hover: { y: -5, scale: 1.01, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } },
+  rest: { y: 0, scale: 1, rotateX: 0 },
+  hover: { y: -7, scale: 1.012, rotateX: 1.5, transition: { type: "spring", stiffness: 320, damping: 24 } },
   tap: { y: 0, scale: 0.985 },
 };
 
@@ -170,6 +195,23 @@ const focusCards = [
   ["Innovation", "Encouraging people to use AI to build useful products, improve services, and solve real problems.", Brain],
 ];
 
+const heroTapeItems = [
+  "AI IN ACTION",
+  "AI IN ACTION OFUNDATION",
+  "AI IN ACTION FOUNDATION",
+  "ADEMOLA",
+  "PRACTICAL AI",
+  "REAL IMPACT",
+  "LEARN",
+  "APPLY",
+  "BUILD",
+  "LEAD",
+  "FROM HYPE TO ACTION",
+  "AI FOR BUILDERS",
+  "AI FOR LEADERS",
+  "KNOWLEDGE INTO OPPORTUNITY",
+];
+
 const gallery = [
   `${A}gallery-panel-1.jpg`,
   `${A}gallery-panel-2.jpg`,
@@ -233,6 +275,7 @@ function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("aief-theme") || "light");
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const onHash = () => setRoute(routeFromHash());
@@ -246,6 +289,13 @@ function App() {
   }, [theme]);
 
   const page = useMemo(() => pageCopy[route] || pageCopy.home, [route]);
+  const pageMotion = reducedMotion
+    ? { initial: false, animate: { opacity: 1 }, exit: { opacity: 1 } }
+    : {
+        initial: { opacity: 0, y: 18 },
+        animate: { opacity: 1, y: 0, transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] } },
+        exit: { opacity: 0, y: -10, transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } },
+      };
 
   const navigate = (id) => {
     window.location.hash = id;
@@ -267,16 +317,20 @@ function App() {
         navigate={navigate}
       />
       <main>
-        {route === "home" && <Home page={page} navigate={navigate} />}
-        {route === "about" && <About page={page} navigate={navigate} />}
-        {route === "founder" && <Founder page={page} navigate={navigate} />}
-        {route === "initiatives" && <Initiatives page={page} navigate={navigate} />}
-        {route === "conference" && <Conference page={page} navigate={navigate} />}
-        {route === "gallery" && <Gallery page={page} navigate={navigate} />}
-        {route === "mentorship" && <Mentorship page={page} navigate={navigate} />}
-        {route === "speaking" && <Speaking page={page} navigate={navigate} />}
-        {route === "get-involved" && <GetInvolved page={page} navigate={navigate} />}
-        {route === "contact" && <Contact page={page} />}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div className="page-motion" key={route} {...pageMotion}>
+            {route === "home" && <Home page={page} navigate={navigate} />}
+            {route === "about" && <About page={page} navigate={navigate} />}
+            {route === "founder" && <Founder page={page} navigate={navigate} />}
+            {route === "initiatives" && <Initiatives page={page} navigate={navigate} />}
+            {route === "conference" && <Conference page={page} navigate={navigate} />}
+            {route === "gallery" && <Gallery page={page} navigate={navigate} />}
+            {route === "mentorship" && <Mentorship page={page} navigate={navigate} />}
+            {route === "speaking" && <Speaking page={page} navigate={navigate} />}
+            {route === "get-involved" && <GetInvolved page={page} navigate={navigate} />}
+            {route === "contact" && <Contact page={page} />}
+          </motion.div>
+        </AnimatePresence>
       </main>
       <Footer navigate={navigate} />
     </>
@@ -339,29 +393,61 @@ function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRou
 
   return (
     <section className={`${compact ? "hero compact section-shell" : "hero section-shell"} ${className}`}>
-      <motion.div className="hero-copy" initial="hidden" animate="show" variants={fadeUp}>
-        <p className="eyebrow">{page.eyebrow}</p>
-        <h1>{page.title}</h1>
-        <p className="hero-body">{page.body}</p>
-        <div className="button-row">
-          <a className="btn primary" href={`#${primaryTarget}`}>
+      <motion.div className="hero-copy" initial="hidden" animate="show" variants={staggerGroup}>
+        <motion.p className="eyebrow" variants={revealItem}>{page.eyebrow}</motion.p>
+        <motion.h1 variants={revealItem}>{page.title}</motion.h1>
+        <motion.p className="hero-body" variants={revealItem}>{page.body}</motion.p>
+        <motion.div className="button-row" variants={revealItem}>
+          <motion.a className="btn primary" href={`#${primaryTarget}`} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
             {page.primary} <ArrowRight size={16} />
-          </a>
-          <a className="btn secondary" href={`#${secondaryTarget}`}>
+          </motion.a>
+          <motion.a className="btn secondary" href={`#${secondaryTarget}`} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
             {page.secondary}
-          </a>
-        </div>
+          </motion.a>
+        </motion.div>
       </motion.div>
       <motion.div className="hero-art" initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>
         <div className="orb-card">
-          <img src={image} alt="" />
-          <div className="hero-stat">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.img
+              key={image}
+              src={image}
+              alt=""
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </AnimatePresence>
+          <motion.div className="hero-stat" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}>
             <strong>100+</strong>
             <span>people engaged</span>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
+      <RollingTape />
     </section>
+  );
+}
+
+function RollingTape() {
+  const reducedMotion = useReducedMotion();
+  const tape = [...heroTapeItems, ...heroTapeItems];
+
+  return (
+    <div className="rolling-tape" aria-label="AIEF headline ticker">
+      <motion.div
+        className="rolling-tape-track"
+        animate={reducedMotion ? { x: 0 } : { x: ["0%", "-50%"] }}
+        transition={reducedMotion ? undefined : { duration: 28, ease: "linear", repeat: Infinity }}
+      >
+        {tape.map((item, index) => (
+          <span className="rolling-tape-item" key={`${item}-${index}`}>
+            {item}
+          </span>
+        ))}
+      </motion.div>
+    </div>
   );
 }
 
@@ -392,13 +478,13 @@ function FeatureCard({ title, text, icon: Icon = Sparkles, action, route, naviga
       viewport={{ once: true, amount: 0.25 }}
       variants={{ ...fadeUp, ...softScale }}
     >
-      <div className="icon-disc"><Icon size={20} /></div>
+      <motion.div className="icon-disc" variants={revealItem}><Icon size={20} /></motion.div>
       <h3>{title}</h3>
       <p>{text}</p>
       {action && (
-        <button type="button" className="text-link" onClick={() => navigate(targetRoute)}>
+        <motion.button type="button" className="text-link" onClick={() => navigate(targetRoute)} whileHover={{ x: 3 }} whileTap={{ scale: 0.97 }}>
           {action} <CircleArrowOutUpRight size={15} />
-        </button>
+        </motion.button>
       )}
       <PatternBand />
     </motion.article>
@@ -507,9 +593,9 @@ function Founder({ page, navigate }) {
         <SectionIntro title="Founder highlights" body="Moments from the AI in Action Now platform, showing the founder's role across leadership, convening, and practical AI conversations." />
         <div className="founder-photo-grid">
           {founderImages.slice(0, 6).map((image, index) => (
-            <button className="photo-tile" key={image} type="button" onClick={() => navigate("gallery")}>
+            <motion.button className="photo-tile" key={image} type="button" onClick={() => navigate("gallery")} whileHover={{ y: -6, scale: 1.015 }} whileTap={{ scale: 0.97 }}>
               <img src={image} alt={`Debola Ibiyode highlight ${index + 1}`} />
-            </button>
+            </motion.button>
           ))}
         </div>
       </section>
@@ -550,9 +636,19 @@ function Conference({ page, navigate }) {
       <section className="section-shell">
         <SectionIntro title="Built for people who want to use AI, not just hear about it" body="AI in Action Now brings together builders, professionals, founders, students, leaders, and organisations to explore the practical side of artificial intelligence." />
         <div className="carousel">
-          <button aria-label="Previous image" onClick={() => setActive((active + gallery.length - 1) % gallery.length)}>{"<"}</button>
-          <img src={gallery[active]} alt="AI in Action Now conference moment" />
-          <button aria-label="Next image" onClick={() => setActive((active + 1) % gallery.length)}>{">"}</button>
+          <motion.button aria-label="Previous image" onClick={() => setActive((active + gallery.length - 1) % gallery.length)} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.94 }}>{"<"}</motion.button>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.img
+              key={gallery[active]}
+              src={gallery[active]}
+              alt="AI in Action Now conference moment"
+              initial={{ opacity: 0, x: 22, scale: 0.98 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -22, scale: 0.98 }}
+              transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1] }}
+            />
+          </AnimatePresence>
+          <motion.button aria-label="Next image" onClick={() => setActive((active + 1) % gallery.length)} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.94 }}>{">"}</motion.button>
         </div>
       </section>
       <section className="section-shell">
@@ -606,11 +702,21 @@ function Gallery({ page, navigate }) {
             </button>
           ))}
         </div>
-        <div className="gallery-feature">
+        <motion.div className="gallery-feature" layout>
           <div className="gallery-feature-image">
-            <img src={selected} alt={`${group.title} selected moment`} />
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.img
+                key={selected}
+                src={selected}
+                alt={`${group.title} selected moment`}
+                initial={{ opacity: 0, scale: 1.04 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+              />
+            </AnimatePresence>
           </div>
-          <div className="gallery-feature-copy">
+          <motion.div className="gallery-feature-copy" layout>
             <p className="eyebrow">{group.images.length} images</p>
             <h2>{group.title}</h2>
             <p>{group.body}</p>
@@ -618,21 +724,24 @@ function Gallery({ page, navigate }) {
               <button className="btn primary" type="button" onClick={() => navigate("conference")}>Explore Conference</button>
               <button className="btn secondary" type="button" onClick={() => navigate("contact")}>Request Media</button>
             </div>
-          </div>
-        </div>
-        <div className="gallery-grid" aria-label={`${group.title} gallery`}>
+          </motion.div>
+        </motion.div>
+        <motion.div className="gallery-grid" aria-label={`${group.title} gallery`} layout>
           {group.images.map((image, index) => (
-            <button
+            <motion.button
               className={image === selected ? "gallery-card active" : "gallery-card"}
               key={image}
               type="button"
               onClick={() => setSelected(image)}
+              layout
+              whileHover={{ y: -5, scale: 1.015 }}
+              whileTap={{ scale: 0.97 }}
             >
               <img src={image} alt={`${group.title} image ${index + 1}`} />
               <span>{String(index + 1).padStart(2, "0")}</span>
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
       </section>
       <CTABlock title="Bring these moments into the next edition" body="Partner, sponsor, speak, volunteer, or help us expand practical AI learning through the next AI in Action Now experience." />
     </>
@@ -785,12 +894,20 @@ function SponsorStrip() {
 
 function CTABlock({ title, body }) {
   return (
-    <motion.section className="cta-block" initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.25 }} variants={fadeUp}>
+    <motion.section
+      className="cta-block"
+      initial="hidden"
+      whileInView="show"
+      whileHover={{ y: -4 }}
+      viewport={{ once: true, amount: 0.25 }}
+      variants={fadeUp}
+      transition={{ type: "spring", stiffness: 220, damping: 28 }}
+    >
       <PatternBand dark />
       <div>
         <h2>{title}</h2>
         <p>{body}</p>
-        <a className="btn primary light" href="#contact">Start a Conversation <ArrowRight size={16} /></a>
+        <motion.a className="btn primary light" href="#contact" whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>Start a Conversation <ArrowRight size={16} /></motion.a>
       </div>
     </motion.section>
   );
@@ -819,8 +936,9 @@ function Footer({ navigate }) {
         <div className="footer-col">
           <h3>Connect</h3>
           <a href="mailto:hello@aiefoundation.org"><Mail size={15} /> Email</a>
-          <button onClick={() => navigate("contact")}>LinkedIn</button>
-          <button onClick={() => navigate("contact")}>YouTube</button>
+          <a href={socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href={socialLinks.youtube} target="_blank" rel="noreferrer">YouTube</a>
+          <a href={socialLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
         </div>
       </div>
       <PatternBand dark />

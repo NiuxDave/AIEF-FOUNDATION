@@ -239,6 +239,11 @@ img {
   padding: clamp(70px, 8vw, 120px) 0;
 }
 
+.page-motion {
+  min-height: 60vh;
+  will-change: opacity, transform;
+}
+
 .hero {
   min-height: calc(100dvh - 92px);
   display: grid;
@@ -246,6 +251,10 @@ img {
   align-items: center;
   gap: clamp(38px, 6vw, 88px);
   padding-top: clamp(56px, 7vw, 96px);
+}
+
+.hero .rolling-tape {
+  grid-column: 1 / -1;
 }
 
 .hero.compact {
@@ -392,6 +401,7 @@ p {
   object-fit: cover;
   object-position: center top;
   mix-blend-mode: normal;
+  will-change: opacity, transform;
 }
 
 .hero-stat {
@@ -416,6 +426,85 @@ p {
   color: #36506f;
   font-size: 13px;
   font-weight: 700;
+}
+
+.rolling-tape {
+  position: relative;
+  overflow: hidden;
+  min-height: 54px;
+  margin-top: clamp(8px, 1.8vw, 18px);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--section) 78%, var(--surface));
+  box-shadow: 0 14px 38px rgba(8, 25, 56, 0.08);
+  isolation: isolate;
+}
+
+.rolling-tape::before,
+.rolling-tape::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  width: 92px;
+  pointer-events: none;
+}
+
+.rolling-tape::before {
+  left: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--section) 86%, var(--surface)), transparent);
+}
+
+.rolling-tape::after {
+  right: 0;
+  background: linear-gradient(270deg, color-mix(in srgb, var(--section) 86%, var(--surface)), transparent);
+}
+
+.rolling-tape-track {
+  width: max-content;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 10px;
+  will-change: transform;
+}
+
+.rolling-tape-item {
+  min-height: 36px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--blue) 26%, transparent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--blue);
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+:root[data-theme="dark"] .rolling-tape {
+  background: color-mix(in srgb, var(--surface-2) 78%, var(--page));
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.24);
+}
+
+:root[data-theme="dark"] .rolling-tape::before {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--surface-2) 86%, var(--page)), transparent);
+}
+
+:root[data-theme="dark"] .rolling-tape::after {
+  background: linear-gradient(270deg, color-mix(in srgb, var(--surface-2) 86%, var(--page)), transparent);
+}
+
+:root[data-theme="dark"] .rolling-tape-item {
+  background: rgba(125, 183, 255, 0.1);
+  color: #f3f8ff;
+  border-color: rgba(125, 183, 255, 0.26);
 }
 
 .symbol-hero .orb-card {
@@ -518,6 +607,8 @@ p {
   background: var(--surface);
   box-shadow: 0 14px 36px rgba(8, 25, 56, 0.06);
   transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transform-style: preserve-3d;
+  will-change: transform;
 }
 
 .feature-card:hover {
@@ -782,9 +873,15 @@ p {
   width: 100%;
   height: 420px;
   object-fit: cover;
+  object-position: center top;
   border-radius: 22px;
   border: 1px solid var(--line);
   box-shadow: var(--shadow);
+}
+
+.carousel img {
+  object-fit: contain;
+  background: var(--surface);
 }
 
 .carousel {
@@ -822,6 +919,7 @@ p {
   overflow: hidden;
   box-shadow: 0 12px 32px rgba(8, 25, 56, 0.08);
   transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  will-change: transform;
 }
 
 .photo-tile {
@@ -916,6 +1014,7 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  will-change: opacity, transform;
 }
 
 .gallery-feature-copy {
@@ -958,6 +1057,7 @@ p {
   height: 230px;
   padding: 0;
   border-radius: 18px;
+  will-change: transform;
 }
 
 .gallery-card.active {
@@ -1348,6 +1448,28 @@ p {
     padding-top: 40px;
   }
 
+  .rolling-tape {
+    min-height: 48px;
+    margin-top: 0;
+    border-radius: 18px;
+  }
+
+  .rolling-tape::before,
+  .rolling-tape::after {
+    width: 36px;
+  }
+
+  .rolling-tape-track {
+    min-height: 48px;
+    gap: 8px;
+  }
+
+  .rolling-tape-item {
+    min-height: 32px;
+    padding: 0 14px;
+    font-size: 11px;
+  }
+
   h1 {
     font-size: clamp(32px, 11vw, 40px);
     line-height: 1.02;
@@ -1490,6 +1612,10 @@ p {
   .image-rail img,
   .carousel img {
     height: 240px;
+  }
+
+  .carousel img {
+    object-fit: contain;
   }
 
   .cta-block {
