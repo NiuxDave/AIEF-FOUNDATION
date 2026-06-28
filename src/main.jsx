@@ -199,7 +199,7 @@ const heroTapeItems = [
   "AI IN ACTION",
   "AI IN ACTION OFUNDATION",
   "AI IN ACTION FOUNDATION",
-  "ADEMOLA",
+  "ADEBOLA",
   "PRACTICAL AI",
   "REAL IMPACT",
   "LEARN",
@@ -229,6 +229,9 @@ const gallery = [
 
 const founderImages = [
   `${A}founder-debola-profile.jpg`,
+  `${A}founder-debola-studio-white.jpeg`,
+  `${A}founder-debola-studio-seated.jpeg`,
+  `${A}founder-debola-studio-closeup.jpeg`,
   `${A}founder-debola-1.jpg`,
   `${A}founder-debola-2.jpg`,
   `${A}founder-debola-3.jpg`,
@@ -823,6 +826,7 @@ function Contact({ page }) {
           <div className="contact-options">
             {["General inquiries", "Partnership and sponsorship", "Speaking and advisory", "Mentorship interest", "Media inquiries"].map((item) => <span key={item}>{item}</span>)}
           </div>
+          <a className="contact-email" href="mailto:hello@aiinactionnow.com"><Mail size={16} /> hello@aiinactionnow.com</a>
         </div>
         <form className="contact-form" onSubmit={(e) => { e.preventDefault(); setSent(true); }}>
           <h2>Send a Message</h2>
@@ -935,7 +939,7 @@ function Footer({ navigate }) {
         ))}
         <div className="footer-col">
           <h3>Connect</h3>
-          <a href="mailto:hello@aiefoundation.org"><Mail size={15} /> Email</a>
+          <a href="mailto:hello@aiinactionnow.com"><Mail size={15} /> hello@aiinactionnow.com</a>
           <a href={socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
           <a href={socialLinks.youtube} target="_blank" rel="noreferrer">YouTube</a>
           <a href={socialLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
