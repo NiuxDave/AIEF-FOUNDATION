@@ -228,14 +228,13 @@ const gallery = [
 ];
 
 const founderImages = [
-  `${A}founder-debola-profile.jpg`,
   `${A}founder-debola-studio-white.jpeg`,
   `${A}founder-debola-studio-seated.jpeg`,
-  `${A}founder-debola-studio-closeup.jpeg`,
   `${A}founder-debola-1.jpg`,
   `${A}founder-debola-2.jpg`,
   `${A}founder-debola-3.jpg`,
   `${A}founder-debola-4.jpg`,
+  `${A}founder-debola-studio-closeup.jpeg`,
   `${A}founder-debola-5.jpg`,
   `${A}founder-debola-6.jpg`,
   `${A}founder-debola-7.jpg`,
@@ -580,7 +579,7 @@ function Founder({ page, navigate }) {
     <>
       <Hero page={page} image={`${A}founder-debola-profile.jpg`} compact />
       <section className="split section-shell">
-        <div className="portrait-frame"><img src={`${A}founder-debola-profile.jpg`} alt="Debola Ibiyode" /></div>
+        <div className="portrait-frame"><img src={`${A}founder-debola-studio-closeup.jpeg`} alt="Debola Ibiyode" /></div>
         <div>
           <SectionIntro align="left" title="A builder first. A leader by practice." body="Debola's work is shaped by years of building systems, leading teams, and applying technology to real problems. AIEF is guided by lived experience in technology and innovation." />
           <div className="cards two mini">
