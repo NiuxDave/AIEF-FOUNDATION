@@ -36,6 +36,12 @@ const socialLinks = {
   linkedin: "https://www.linkedin.com/feed/update/urn:li:activity:7472663390587445248/",
 };
 
+const socialHandles = [
+  ["Instagram", "@aiinactionnow", socialLinks.instagram],
+  ["LinkedIn", "Debola Ibiyode / AI in Action", socialLinks.linkedin],
+  ["YouTube", "Debola Ibiyode", socialLinks.youtube],
+];
+
 function resolveActionRoute(label, fallback = "contact") {
   return contactActionPattern.test(label || "") ? "contact" : fallback;
 }
@@ -392,6 +398,8 @@ function Header({ route, theme, onTheme, menuOpen, setMenuOpen, dropOpen, setDro
 function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRoute = "initiatives", secondaryRoute = "get-involved", className = "" }) {
   const primaryTarget = resolveActionRoute(page.primary, primaryRoute);
   const secondaryTarget = resolveActionRoute(page.secondary, secondaryRoute);
+  const [socialOpen, setSocialOpen] = useState(false);
+  const isSocialAction = /follow us online/i.test(page.secondary || "");
 
   return (
     <section className={`${compact ? "hero compact section-shell" : "hero section-shell"} ${className}`}>
@@ -403,9 +411,15 @@ function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRou
           <motion.a className="btn primary" href={`#${primaryTarget}`} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
             {page.primary} <ArrowRight size={16} />
           </motion.a>
-          <motion.a className="btn secondary" href={`#${secondaryTarget}`} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
-            {page.secondary}
-          </motion.a>
+          {isSocialAction ? (
+            <motion.button className="btn secondary" type="button" onClick={() => setSocialOpen(true)} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
+              {page.secondary}
+            </motion.button>
+          ) : (
+            <motion.a className="btn secondary" href={`#${secondaryTarget}`} whileHover={{ y: -3 }} whileTap={{ scale: 0.97 }}>
+              {page.secondary}
+            </motion.a>
+          )}
         </motion.div>
       </motion.div>
       <motion.div className="hero-art" initial={{ opacity: 0, y: 28, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.65, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}>
@@ -428,6 +442,29 @@ function Hero({ page, image = `${A}event-panel.jpg`, compact = false, primaryRou
         </div>
       </motion.div>
       <RollingTape />
+      <AnimatePresence>
+        {socialOpen && (
+          <motion.div className="social-overlay" role="dialog" aria-modal="true" aria-label="AIEF social media links" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <button className="social-overlay-backdrop" type="button" aria-label="Close social links" onClick={() => setSocialOpen(false)} />
+            <motion.div className="social-menu" initial={{ opacity: 0, y: 18, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 12, scale: 0.97 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}>
+              <button className="social-close" type="button" aria-label="Close social links" onClick={() => setSocialOpen(false)}><X size={18} /></button>
+              <p className="eyebrow">Follow AIEF Online</p>
+              <h2>Choose a platform</h2>
+              <div className="social-menu-links">
+                {socialHandles.map(([label, handle, href]) => (
+                  <a key={label} href={href} target="_blank" rel="noreferrer">
+                    <span>
+                      <strong>{label}</strong>
+                      <small>{handle}</small>
+                    </span>
+                    <CircleArrowOutUpRight size={18} />
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
